@@ -28,3 +28,16 @@ dev = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+
+[tool.coverage.run]
+source = ["depfresh"]
+branch = true
+omit = ["tests/*", "src/depfresh/__main__.py"]
+
+[tool.coverage.report]
+fail_under = 100
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__",
+]

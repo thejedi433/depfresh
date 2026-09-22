@@ -328,3 +328,25 @@ def test_main_mixed_results(
     captured = capsys.readouterr()
     assert "up to date" in captured.out
     assert "outdated" in captured.out.lower()
+
+
+def test_python_m_execution(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """Test that python -m depfresh works."""
+    import subprocess
+    import sys
+
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "pyproject.toml").write_text(
+        '[project]\nname = "t"\nversion = "0.1"\ndependencies = []\n'
+    )
+
+    result = subprocess.run(
+        [sys.executable, "-m", "depfresh"],
+        capture_output=True,
+        text=True,
+        cwd=tmp_path,
+    )
+
+    assert result.returncode == 0
+    assert "No dependencies" in result.stdout
+
